@@ -1,32 +1,23 @@
-// const express= require('express');
-// let exp= express();
+const path = require('path');
 
-// exp.get('/', (req,res)=>{
-  
-//     res.send( { key1: "value" });
-// })
+const express = require('express');
+const bodyParser = require('body-parser');
 
-// exp.listen(3000, ()=> {
-//     console.log("First express code");
-// })
+const app = express();
 
-const express= require('express');
-const app= express();
-const bodyParser= require('body-parser');
-
-const adminRouter= require('./routes/admin');
-
-const shopRouter= require('./routes/shop');
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+const contactRoutes = require('./routes/contactus');
 
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(adminRouter);
-app.use(shopRouter);
+app.use('/admin', adminRoutes);
+app.use('/admin', contactRoutes);
+app.use(shopRoutes);
 
-app.use((req,res,next)=>
-{
- res.status(404).send("Page Not Found");
-})
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
 
 app.listen(3000);
- 
